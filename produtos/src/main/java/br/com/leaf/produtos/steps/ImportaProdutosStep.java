@@ -5,6 +5,7 @@ import br.com.leaf.produtos.models.Produtos;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,10 +19,12 @@ public class ImportaProdutosStep {
     @Bean
     public Step importarProdutosStep(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager,
                                      @Qualifier("importarProdutosReader") ItemReader<ProdutosImportDTO> importarProdutosReader,
-                                     @Qualifier("importarProdutosWriter") ItemWriter<ProdutosImportDTO> importarProdutosWriter) {
+                                     @Qualifier("importarProdutosProcessor") ItemProcessor<ProdutosImportDTO, Produtos> importarProdutosProcessor,
+                                     @Qualifier("importarProdutosWriter") ItemWriter<Produtos> importarProdutosWriter) {
         return new StepBuilder("importarProdutosStep", jobRepository)
-                .<ProdutosImportDTO, ProdutosImportDTO>chunk(100, platformTransactionManager)
+                .<ProdutosImportDTO, Produtos>chunk(100, platformTransactionManager)
                 .reader(importarProdutosReader)
+                .processor(importarProdutosProcessor)
                 .writer(importarProdutosWriter)
                 .build();
     }

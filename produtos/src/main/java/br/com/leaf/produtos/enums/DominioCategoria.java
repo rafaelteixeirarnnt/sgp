@@ -12,13 +12,14 @@ public enum DominioCategoria {
     EL("Eletrônicos", "EL"),
     MV("Moda e Vestuário", "MV"),
     AB("Alimentos e Bebidas", "AB"),
-    EF("Esportes e Fitness", "EF");
+    EF("Esportes e Fitness", "EF"),
+    OS("Outros", "OS");
 
     private final String descricao;
     private final String sigla;
 
     public static DominioCategoria obterPorSigla(String sigla) {
-        return Arrays.stream(DominioCategoria.values()).filter(c -> c.getSigla().equalsIgnoreCase(sigla)).findFirst().get();
+        return Arrays.stream(DominioCategoria.values()).filter(c -> c.getSigla().equalsIgnoreCase(sigla)).findFirst().orElse(OS);
     }
 
 }

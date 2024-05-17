@@ -19,10 +19,11 @@ public class ImportaProdutosReader {
     public ItemReader<ProdutosImportDTO> importarProdutosReader() {
         FlatFileItemReader<ProdutosImportDTO> reader = new FlatFileItemReader<>();
         reader.setResource(new ClassPathResource("carga_inicial.csv"));
+        reader.setLinesToSkip(1);
 
         DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
         tokenizer.setDelimiter(";");
-        tokenizer.setNames("id", "nome", "descricao", "preco", "quantidade", "especificacaoTecnica", "categoria", "situacao");
+        tokenizer.setNames("id", "nome", "descricao", "preco", "categoria", "especificacaoTecnica", "situacao", "quantidade");
 
         BeanWrapperFieldSetMapper<ProdutosImportDTO> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
         fieldSetMapper.setTargetType(ProdutosImportDTO.class);
