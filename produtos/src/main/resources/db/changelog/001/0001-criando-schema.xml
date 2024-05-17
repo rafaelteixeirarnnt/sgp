@@ -1,0 +1,43 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- Criando esquema da aplicação -->
+    <changeSet id="1" author="Rafael Teixeira">
+        <sql dbms="postgresql" endDelimiter=";">
+            CREATE SCHEMA produtos
+        </sql>
+        <createTable tableName="tb_produtos" schemaName="produtos">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tx_nome" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tx_descricao" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_cadastro" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_atualizacao" type="datetime" />
+            <column name="vl_preco" type="currency">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NR_QTD" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tx_categoria" type="varchar(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tx_especificacao_tecnica" type="varchar(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ind_situacao" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

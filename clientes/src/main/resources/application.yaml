@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: clientes
+  docker:
+    compose:
+      file: ./clientes/docker-compose.yaml
+  datasource:
+    url: jdbc:postgresql://localhost:5433/sgp?createDatabaseIfNotExist=true
+    driver-class-name: org.postgresql.Driver
+    username: root
+    password: root
+    hikari:
+      schema: ${spring.application.name}
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+
+server:
+  port: 8081
