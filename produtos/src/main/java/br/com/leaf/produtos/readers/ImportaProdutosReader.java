@@ -1,10 +1,8 @@
 package br.com.leaf.produtos.readers;
 
 import br.com.leaf.produtos.dtos.ProdutosImportDTO;
-import br.com.leaf.produtos.models.Produtos;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;

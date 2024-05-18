@@ -44,16 +44,16 @@ public class ProdutosServices {
     private static final String TYPE = "text/csv";
     private static final String PRODUTOS_IMPORTACAO = "produtos-importacao";
     private static final String APPLICATION_VND_MS_EXCEL = "application/vnd.ms-excel";
-    private static final String CABECALHO_CSV_PRODUTOS = "ID;Nome;Descrição;Preço;Quantidade;Especificação Técnica;Categoria;Situação\n";
+    private static final String CABECALHO_CSV_PRODUTOS = "id;nome;descricao;preco;categoria;especificacaoTecnica;situacao;quantidade";
 
     private static final int INDICE_ID = 0;
     private static final int INDICE_NOME = 1;
     private static final int INDICE_DESCRICAO = 2;
     private static final int INDICE_PRECO = 3;
-    private static final int INDICE_QUANTIDADE = 4;
+    private static final int INDICE_CATEGORIA = 4;
     private static final int INDICE_ESPECIFICACAO_TECNICA = 5;
-    private static final int INDICE_CATEGORIA = 6;
-    private static final int INDICE_SITUACAO = 7;
+    private static final int INDICE_SITUACAO = 6;
+    private static final int INDICE_QUANTIDADE = 7;
 
     private final ProdutosMapper mapper;
     private final ProdutosRepository repository;
@@ -79,18 +79,53 @@ public class ProdutosServices {
         while ((line = reader.readLine()) != null) {
             String[] data = line.split(SEPARADOR);
             var produto = new Produtos();
-            produto.setId(null);
-            produto.setNome(data[INDICE_NOME]);
-            produto.setDescricao(data[INDICE_DESCRICAO]);
-            produto.setPreco(BigDecimal.valueOf(Double.parseDouble(data[INDICE_PRECO])));
-            produto.setQuantidade(BigInteger.valueOf(Long.parseLong(data[INDICE_QUANTIDADE])));
-            produto.setEspecificacaoTecnica(data[INDICE_ESPECIFICACAO_TECNICA]);
-            produto.setCategoria(DominioCategoria.obterPorSigla(data[INDICE_CATEGORIA]));
-            produto.setSituacao(Boolean.valueOf(data[INDICE_SITUACAO]));
-            produto.setDtCadastro(LocalDateTime.now());
+            UUID id = montarID(data);
+            if (Objects.isNull(id)) {
+                criarProdutoSemRegistro(produto, id, data);
+            } else {
+                var produtoDB  = this.repository.findById(id).orElse(null);
+                if (Objects.nonNull(produtoDB)) {
+                    atualizarProdutoComRegistro(produtoDB, data);
+                    produto = produtoDB;
+                } else {
+                    criarProdutoSemRegistro(produto, id, data);
+                }
+            }
             produtos.add(produto);
         }
         return produtos;
+    }
+
+    private void atualizarProdutoComRegistro(Produtos produtoDB, String[] data) {
+        produtoDB.setNome(data[INDICE_NOME]);
+        produtoDB.setDescricao(data[INDICE_DESCRICAO]);
+        produtoDB.setPreco(BigDecimal.valueOf(Double.parseDouble(data[INDICE_PRECO])));
+        produtoDB.setQuantidade(BigInteger.valueOf(Long.parseLong(data[INDICE_QUANTIDADE])));
+        produtoDB.setEspecificacaoTecnica(data[INDICE_ESPECIFICACAO_TECNICA]);
+        produtoDB.setCategoria(DominioCategoria.obterPorSigla(data[INDICE_CATEGORIA]));
+        produtoDB.setSituacao(Boolean.valueOf(data[INDICE_SITUACAO]));
+        produtoDB.setDtAtualizacao(LocalDateTime.now());
+    }
+
+    private void criarProdutoSemRegistro(Produtos produto, UUID id, String[] data) {
+        produto.setId(id);
+        produto.setNome(data[INDICE_NOME]);
+        produto.setDescricao(data[INDICE_DESCRICAO]);
+        produto.setPreco(BigDecimal.valueOf(Double.parseDouble(data[INDICE_PRECO])));
+        produto.setQuantidade(BigInteger.valueOf(Long.parseLong(data[INDICE_QUANTIDADE])));
+        produto.setEspecificacaoTecnica(data[INDICE_ESPECIFICACAO_TECNICA]);
+        produto.setCategoria(DominioCategoria.obterPorSigla(data[INDICE_CATEGORIA]));
+        produto.setSituacao(Boolean.valueOf(data[INDICE_SITUACAO]));
+        produto.setDtCadastro(LocalDateTime.now());
+    }
+
+    private UUID montarID(String[] data) {
+        try {
+            var id = data[INDICE_ID];
+            return Objects.nonNull(id) ? UUID.fromString(id) : null;
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     public boolean validarArquivo(MultipartFile arquivo) {
@@ -103,7 +138,7 @@ public class ProdutosServices {
             if (!isCsvExtension) {
                 throw new ProdutosNegocioException("Extensão inválida do arquivo.");
             }
-            return isCsvType && isCsvExtension;
+            return true;
         }
         return false;
     }
