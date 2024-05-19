@@ -1,14 +1,20 @@
 spring:
   application:
     name: produtos
+  config:
+    import: configserver:http://localhost:8888
+  cloud:
+    config:
+      name: produtos
+
   docker:
     compose:
       file: ./produtos/docker-compose.yaml
   datasource:
-    url: jdbc:postgresql://localhost:5434/sgp?createDatabaseIfNotExist=true
-    driver-class-name: org.postgresql.Driver
-    username: root
-    password: root
+    url:
+    driver-class-name:
+    username:
+    password:
     hikari:
       schema: ${spring.application.name}
   liquibase:
@@ -16,8 +22,6 @@ spring:
   batch:
     jdbc:
       initialize-schema: always
-
-
 
 server:
   port: 8082

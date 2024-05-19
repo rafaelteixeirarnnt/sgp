@@ -1,9 +1,15 @@
 spring:
   application:
-    name: clientes
+    name: pedidos
+  config:
+    import: configserver:http://localhost:8888
+  cloud:
+    config:
+      name: pedidos
+
   docker:
     compose:
-      file: ./clientes/docker-compose.yaml
+      file: ./pedidos/docker-compose.yaml
   datasource:
     url:
     driver-class-name:
@@ -15,4 +21,4 @@ spring:
     change-log: classpath:/db/changelog/changelog-master.xml
 
 server:
-  port: 8081
+  port: 8083
