@@ -24,19 +24,19 @@ public class GlobalExceptionHandler {
                 error = new ErrorResponse(BAD_REQUEST.value(),
                         ex.getMessage(),
                         request.getDescription(false),
-                        getStackTrace(ex.getCause()));
+                        getStackTrace(ex));
                 return new ResponseEntity<>(error, BAD_REQUEST);
             case 404:
                 error = new ErrorResponse(NOT_FOUND.value(),
                         ex.getMessage(),
                         request.getDescription(false),
-                        getStackTrace(ex.getCause()));
+                        getStackTrace(ex));
                 return new ResponseEntity<>(error, NOT_FOUND);
         }
         error = new ErrorResponse(BAD_REQUEST.value(),
                 ex.getMessage(),
                 request.getDescription(false),
-                getStackTrace(ex.getCause()));
+                getStackTrace(ex));
         return new ResponseEntity<>(error, BAD_REQUEST);
     }
 

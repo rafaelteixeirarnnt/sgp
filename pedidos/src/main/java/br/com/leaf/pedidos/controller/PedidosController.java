@@ -23,8 +23,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.UUID;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/pedidos")
@@ -52,7 +50,7 @@ public class PedidosController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Serviço responsável por devolver os pedidos por id.")
+    @Operation(summary = "Serviço responsável por devolver os detalhes do pedido.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Pedido localizado",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = PedidoDTO.class))),
@@ -61,7 +59,6 @@ public class PedidosController {
     })
     public ResponseEntity<PedidoDTO> obterPedidoPorId(@PathVariable("id") String id) {
         var dto = service.obterPedidoPorId(id);
-
         return ResponseEntity.ok().body(dto);
     }
 

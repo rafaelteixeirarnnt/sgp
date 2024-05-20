@@ -33,12 +33,7 @@ public class PedidosServices {
     public UUID salvarPedido(CriaPedidoRequestDTO dto) {
         var pedido = this.mapper.criarCadastraProdutoDTOToProdutos(dto);
 
-//        var clienteResponse = clienteGateway.recuperarClientID(dto.getIdCliente().toString());
         clienteGateway.recuperarClientID(dto.getIdCliente().toString());
-
-//        if (Objects.isNull(clienteResponse)) {
-//            throw new PedidoNegocioException("Cliente não localizado", 404);
-//        }
 
         var requestProduto = new AtualizaEstoqueRequest(dto.getIdProduto().toString(), dto.getQuantidade());
 
@@ -55,11 +50,8 @@ public class PedidosServices {
     }
 
     public PedidoDTO obterPedidoPorId(String id) {
-        Pedidos pedido;
-        UUID uuid;
-
         if (Objects.nonNull(id) && !id.isBlank()) {
-            uuid = gerarUuid(id);
+            UUID uuid = gerarUuid(id);
             var pedidoDb = this.repository.findById(uuid).orElseThrow(() -> new PedidoNegocioException("Pedido não localizado", 404));
             return this.mapper.pedidoTOPedidoDTO(pedidoDb);
         }
