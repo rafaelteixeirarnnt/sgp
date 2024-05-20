@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
         var error = new ErrorResponse(BAD_REQUEST.value(),
                 ex.getMessage(),
                 request.getDescription(false),
-                getStackTrace(ex.getCause()));
+                getStackTrace(ex));
         return new ResponseEntity<>(error, BAD_REQUEST);
     }
 

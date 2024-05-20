@@ -55,6 +55,6 @@ public class Pedidos {
     private LocalDateTime dtCadastro;
 
     @Column(name = "DT_ATUALIZACAO")
-    private LocalDateTime dtAtualizacao;;
+    private LocalDateTime dtAtualizacao;
 
 }

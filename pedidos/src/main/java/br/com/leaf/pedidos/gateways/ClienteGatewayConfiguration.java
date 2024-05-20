@@ -21,12 +21,12 @@ public class ClienteGatewayConfiguration {
         return directChannel;
     }
 
-    @Bean
-    public MessageChannel responseClientID() {
-        var directChannel = new DirectChannel();
-        directChannel.setFailover(false);
-        return directChannel;
-    }
+//    @Bean
+//    public MessageChannel responseClientID() {
+//        var directChannel = new DirectChannel();
+//        directChannel.setFailover(false);
+//        return directChannel;
+//    }
 
     @Bean
     public IntegrationFlow recuperarClientIDFlow() {
@@ -34,19 +34,20 @@ public class ClienteGatewayConfiguration {
                 .handle(Http.outboundGateway("http://localhost:8081/api/clientes/{id}")
                         .uriVariable("id", Message::getPayload)
                         .httpMethod(HttpMethod.GET)
-                        .expectedResponseType(ClienteResponseDTO.class)
-                        .messageConverters(new MappingJackson2HttpMessageConverter()))
+//                        .expectedResponseType(ClienteResponseDTO.class)
+//                        .messageConverters(new MappingJackson2HttpMessageConverter())
+                )
                 .log()
                 .get();
     }
 
-    @Bean
-    public IntegrationFlow processarRespostaClientIDFlow() {
-        return IntegrationFlow.from("recuperarClientID")
-                .handle(message -> {
-                    ClienteResponseDTO clienteResponseDTO = (ClienteResponseDTO) message.getPayload();
-                })
-                .get();
-    }
+//    @Bean
+//    public IntegrationFlow processarRespostaClientIDFlow() {
+//        return IntegrationFlow.from("recuperarClientID")
+//                .handle(message -> {
+//                    ClienteResponseDTO clienteResponseDTO = (ClienteResponseDTO) message.getPayload();
+//                })
+//                .get();
+//    }
 
 }

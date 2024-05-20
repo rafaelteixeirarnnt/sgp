@@ -1,5 +1,7 @@
 package br.com.leaf.produtos.services;
 
+import br.com.leaf.produtos.dtos.AtualizaEstoqueDTO;
+import br.com.leaf.produtos.dtos.AtualizaEstoqueResponseDTO;
 import br.com.leaf.produtos.dtos.AtualizaProdutoDTO;
 import br.com.leaf.produtos.dtos.CadastraProdutoDTO;
 import br.com.leaf.produtos.dtos.ProdutosDTO;
@@ -83,7 +85,7 @@ public class ProdutosServices {
             if (Objects.isNull(id)) {
                 criarProdutoSemRegistro(produto, id, data);
             } else {
-                var produtoDB  = this.repository.findById(id).orElse(null);
+                var produtoDB = this.repository.findById(id).orElse(null);
                 if (Objects.nonNull(produtoDB)) {
                     atualizarProdutoComRegistro(produtoDB, data);
                     produto = produtoDB;
@@ -201,5 +203,26 @@ public class ProdutosServices {
         produto.setSituacao(Boolean.TRUE);
         produto.setDtCadastro(LocalDateTime.now());
         return this.repository.save(produto).getId();
+    }
+
+    public AtualizaEstoqueResponseDTO separarProdutos(AtualizaEstoqueDTO dto) {
+        var uuid = getUuid(dto.getIdProduto());
+
+        var produto = this.repository.findById(uuid).orElseThrow(() -> new ProdutosNegocioException("Produto não localizado"));
+
+        BigInteger quantidade = produto.getQuantidade();
+        if (produto.getSituacao()) {
+            if (quantidade.compareTo(BigInteger.ZERO) > 0) {
+                var resultado = produto.getQuantidade().subtract(dto.getQuantidade());
+                if (resultado.compareTo(BigInteger.ZERO) > 0) {
+                    produto.setQuantidade(resultado);
+                    this.repository.save(produto);
+                    return new AtualizaEstoqueResponseDTO(Boolean.TRUE);
+                }
+                throw new ProdutosNegocioException("Quantidade insuficiente");
+            }
+            throw new ProdutosNegocioException("Quantidade zerada");
+        }
+        throw new ProdutosNegocioException("Produto inativado");
     }
 }

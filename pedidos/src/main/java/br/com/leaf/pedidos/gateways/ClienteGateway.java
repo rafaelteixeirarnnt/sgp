@@ -11,6 +11,6 @@ public interface ClienteGateway {
 
     @Gateway(requestChannel = "recuperarClientID", requestTimeout = 5000,
             headers = @GatewayHeader(name = MessageHeaders.REPLY_CHANNEL, expression = "@nullChannel"))
-    ClienteResponseDTO recuperarClientID(String id);
+    void recuperarClientID(String id);
 
 }

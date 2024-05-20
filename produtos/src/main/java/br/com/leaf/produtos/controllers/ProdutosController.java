@@ -1,5 +1,7 @@
 package br.com.leaf.produtos.controllers;
 
+import br.com.leaf.produtos.dtos.AtualizaEstoqueDTO;
+import br.com.leaf.produtos.dtos.AtualizaEstoqueResponseDTO;
 import br.com.leaf.produtos.dtos.AtualizaProdutoDTO;
 import br.com.leaf.produtos.dtos.CadastraProdutoDTO;
 import br.com.leaf.produtos.dtos.ProdutosDTO;
@@ -123,6 +125,17 @@ public class ProdutosController {
                 .buildAndExpand(uuid)
                 .toUri();
         return ResponseEntity.created(location).build();
+    }
+
+    @PostMapping(value = "/atualiza-estoque", produces = "application/json", consumes = "application/json")
+    @Operation(summary = "Serviço responsável por reservar produtos para o pedido.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produto separado com Sucesso"),
+            @ApiResponse(responseCode = "400", description = "Falha ao cadastrar produto"),
+    })
+    public ResponseEntity<AtualizaEstoqueResponseDTO> separarProdutos(@Valid @RequestBody AtualizaEstoqueDTO dto) {
+        var response = this.services.separarProdutos(dto);
+        return ResponseEntity.ok().body(response);
     }
 
 }
