@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/clientes")
@@ -73,8 +75,13 @@ public class ClientesController {
             @ApiResponse(responseCode = "400", description = "Falha ao recuperar cliente"),
     })
     public ResponseEntity<ClienteDTO> obterCliente(@NotNull @PathVariable String id) {
-        var clienteDTO = service.obterClienteId(id);
-        return ResponseEntity.ok().body(clienteDTO);
+        try {
+            var clienteDTO = service.obterClienteId(id);
+            return ResponseEntity.ok().body(clienteDTO);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")

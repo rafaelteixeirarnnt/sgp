@@ -3,6 +3,7 @@ package br.com.leaf.clientes.services;
 import br.com.leaf.clientes.dtos.AtualizaClienteRequestDTO;
 import br.com.leaf.clientes.dtos.ClienteDTO;
 import br.com.leaf.clientes.dtos.CriaClienteRequestDTO;
+import br.com.leaf.clientes.exceptions.ClienteNegocioException;
 import br.com.leaf.clientes.mappers.ClientesMapper;
 import br.com.leaf.clientes.repositories.ClientesRepository;
 import br.com.leaf.clientes.services.validation.ClientesValidation;
@@ -43,12 +44,12 @@ public class ClientesServices {
 
     public ClienteDTO obterClienteId(String id) {
         return this.mapper.clienteTOClienteDTO(this.repository.findById(UUID.fromString(id))
-                                .orElseThrow(() -> new RuntimeException("Cliente não localizado")));
+                                .orElseThrow(() -> new ClienteNegocioException("Cliente não localizado", 404)));
     }
 
     public void deletarCliente(String id) {
         var cliente = this.repository.findById(UUID.fromString(id))
-                .orElseThrow(() -> new RuntimeException("Cliente não localizado"));
+                .orElseThrow(() -> new ClienteNegocioException("Cliente não localizado", 404));
         cliente.setSituacao(Boolean.FALSE);
         this.repository.save(cliente);
     }
