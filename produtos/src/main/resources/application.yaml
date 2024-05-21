@@ -5,7 +5,7 @@ spring:
     import: configserver:http://localhost:8888
   cloud:
     config:
-      name: produtos
+      name: ${spring.application.name}
 
   docker:
     compose:

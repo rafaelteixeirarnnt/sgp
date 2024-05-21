@@ -1,6 +1,12 @@
 spring:
   application:
     name: clientes
+  config:
+    import: configserver:http://localhost:8888
+  cloud:
+    config:
+      name: ${spring.application.name}
+
   docker:
     compose:
       file: ./clientes/docker-compose.yaml
@@ -11,8 +17,8 @@ spring:
     password:
     hikari:
       schema: ${spring.application.name}
+
   liquibase:
     change-log: classpath:/db/changelog/changelog-master.xml
-
 server:
   port: 8081

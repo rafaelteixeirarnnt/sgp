@@ -12,7 +12,7 @@ RUN mvn clean package -DskipTests=true -Dmaven.test.skip=true
 RUN cp /app/target/*.jar /app.jar
 
 ## Exponha a porta que a aplicação Spring Boot está utilizando (por exemplo, 8080)
-EXPOSE 8082
+EXPOSE 8888
 #
 ## Comando para iniciar a aplicação quando o contêiner for iniciado
 ENTRYPOINT ["java", "-jar", "/app.jar"]

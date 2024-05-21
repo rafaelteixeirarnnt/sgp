@@ -5,7 +5,7 @@ spring:
     import: configserver:http://localhost:8888
   cloud:
     config:
-      name: pedidos
+      name: ${spring.application.name}
 
   docker:
     compose:
@@ -19,6 +19,5 @@ spring:
       schema: ${spring.application.name}
   liquibase:
     change-log: classpath:/db/changelog/changelog-master.xml
-
 server:
   port: 8083

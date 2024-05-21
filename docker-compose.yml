@@ -1,0 +1,96 @@
+version: '3.8'
+
+networks:
+  sgp-network:
+    name: sgp-network
+    external: true
+
+services:
+  config-server:
+    image: sgp-config-server:latest
+    container_name: sgp-config-server
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - sgp-network
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: sgp
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - sgp-network
+
+  clientes:
+    image: sgp-clientes:latest
+    container_name: sgp-clientes
+    build:
+      context: ./clientes
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sgp?currentSchema=sgp&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+    depends_on:
+      - config-server
+      - postgres
+    ports:
+      - "8081:8081"
+    networks:
+      - sgp-network
+
+  produtos:
+    image: sgp-produtos:latest
+    container_name: sgp-produtos
+    build:
+      context: ./produtos
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:54322/sgp
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+    depends_on:
+      - config-server
+      - postgres
+    ports:
+      - "8082:8082"
+    networks:
+      - sgp-network
+
+  pedidos:
+    image: sgp-pedidos:latest
+    container_name: sgp-pedidos
+    build:
+      context: ./pedidos
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:54322/sgp
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+    depends_on:
+      - config-server
+      - postgres
+      - clientes
+      - produtos
+    ports:
+      - "8083:8083"
+    networks:
+      - sgp-network
+
+volumes:
+  postgres_data:
