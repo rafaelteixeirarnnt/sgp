@@ -19,15 +19,15 @@ services:
     networks:
       - sgp-network
 
-  postgres:
+  postgresdb:
     image: postgres:13
-    container_name: postgres
+    container_name: postgresdb
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: sgp
     ports:
-      - "5433:5432"
+      - "54322:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -40,13 +40,13 @@ services:
       context: ./clientes
       dockerfile: Dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sgp?currentSchema=sgp&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresdb:54322/sgp?currentSchema=clientes&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_CLOUD_CONFIG_URI: http://config-server:8888
     depends_on:
       - config-server
-      - postgres
+      - postgresdb
     ports:
       - "8081:8081"
     networks:
@@ -59,7 +59,7 @@ services:
       context: ./produtos
       dockerfile: Dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:54322/sgp
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresdb:54322/sgp?currentSchema=produtos&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_CLOUD_CONFIG_URI: http://config-server:8888
@@ -78,7 +78,7 @@ services:
       context: ./pedidos
       dockerfile: Dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:54322/sgp
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresdb:54322/sgp?currentSchema=pedidos&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_CLOUD_CONFIG_URI: http://config-server:8888

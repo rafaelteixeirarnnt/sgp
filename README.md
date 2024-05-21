@@ -107,7 +107,7 @@ O projeto SGP foi desenvolvido utilizando o ecossistema do Spring, incluindo os 
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-usuario/sgp.git
+   git clone https://github.com/rafaelteixeirarnnt/sgp.git
    cd sgp
    ```
 
@@ -118,6 +118,6 @@ O projeto SGP foi desenvolvido utilizando o ecossistema do Spring, incluindo os 
 
 3.	Acesse a aplicação em seu navegador:
 
-- Clientes: http://localhost:8081
-- Produtos: http://localhost:8082
-- Pedidos: http://localhost:8083
+- Clientes: http://localhost:8081/swagger-ui/index.html
+- Produtos: http://localhost:8082/swagger-ui/index.html
+- Pedidos: http://localhost:8083/swagger-ui/index.html
